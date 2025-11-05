@@ -1,54 +1,56 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import appCss from '../styles.css?url'
+import { QueryClient } from "@tanstack/react-query";
+import { createRootRouteWithContext } from "@tanstack/react-router";
+import { Outlet, Scripts, HeadContent } from "@tanstack/react-router";
+import { ClerkProvider } from '@clerk/tanstack-react-start'
+import {TanStackDevtools,} from '@tanstack/react-devtools'
+import * as React from "react";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   head: () => ({
     meta: [
       {
-        charSet: 'utf-8',
+        charSet: "utf-8",
       },
       {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
       },
       {
-        title: 'My First Tanstack Start App',
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
+        title: "WChat.ai - AI Chatbot for your Website",
       },
     ],
   }),
+  component: RootComponent,
+});
 
-  shellComponent: RootDocument,
-})
+function RootComponent() {
+  return (
+    <ClerkProvider>
+      <RootDocument>
+      <Outlet />
+    </RootDocument>
+    </ClerkProvider>
+  );
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
-        <Scripts />
-      </body>
-    </html>
-  )
+        <head>
+          <HeadContent />
+        </head>
+        <body>
+          {children}
+          <TanStackDevtools
+            config={{
+              position: 'bottom-right',
+            }}
+           
+          />
+          <Scripts />
+        </body>
+      </html>
+  );
 }
